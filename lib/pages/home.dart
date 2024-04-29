@@ -2,16 +2,80 @@ import 'package:bross/pages/login.dart';
 import 'package:bross/pages/product_detail.dart';
 import 'package:bross/styles/color_style.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   const Home({super.key});
 
-  void navigateToProductDetail(BuildContext context, String image, String name,
-      String address, String description) {
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  late ThemeData _themeData;
+  bool _isDarkMode = false;
+  int _currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTheme();
+  }
+
+  _loadTheme() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isDarkMode = prefs.getBool('isDarkMode') ?? false;
+      _themeData = _isDarkMode ? _buildDarkTheme() : _buildLightTheme();
+    });
+  }
+
+  _toggleTheme(bool isDarkMode) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isDarkMode', isDarkMode);
+    setState(() {
+      _isDarkMode = isDarkMode;
+      _themeData = isDarkMode ? _buildDarkTheme() : _buildLightTheme();
+    });
+  }
+
+  ThemeData _buildLightTheme() {
+    return ThemeData.light().copyWith(
+      scaffoldBackgroundColor: ColorStyle.lightPrimary,
+      appBarTheme: const AppBarTheme(
+        backgroundColor: ColorStyle.lightPrimary,
+      ),
+      textTheme: const TextTheme(
+        bodyLarge: TextStyle(color: ColorStyle.lightText),
+        bodyMedium: TextStyle(color: ColorStyle.lightText),
+        // tambahkan gaya teks lainnya sesuai kebutuhan
+      ),
+      // tambahkan tema lainnya sesuai kebutuhan
+    );
+  }
+
+  ThemeData _buildDarkTheme() {
+    return ThemeData.dark().copyWith(
+      scaffoldBackgroundColor: ColorStyle.darkBackground,
+      appBarTheme: const AppBarTheme(
+        backgroundColor: ColorStyle.darkPrimary,
+      ),
+      textTheme: const TextTheme(
+        bodyLarge: TextStyle(color: ColorStyle.darkText),
+        bodyMedium: TextStyle(color: ColorStyle.darkText),
+        // tambahkan gaya teks lainnya sesuai kebutuhan
+      ),
+      // tambahkan tema lainnya sesuai kebutuhan
+    );
+  }
+
+  void navigateToProductDetail(BuildContext context, ThemeData themeData,
+      String image, String name, String address, String description) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => ProductDetail(
+          themeData: themeData,
           image: image,
           name: name,
           address: address,
@@ -24,7 +88,9 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorStyle.background,
+      backgroundColor:
+          _isDarkMode ? ColorStyle.darkBackground : ColorStyle.background,
+      // backgroundColor: ColorStyle.background,
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -33,9 +99,11 @@ class Home extends StatelessWidget {
                 Container(
                   height: 150,
                   width: double.infinity,
-                  decoration: const ShapeDecoration(
-                    color: ColorStyle.primary,
-                    shape: RoundedRectangleBorder(
+                  decoration: ShapeDecoration(
+                    color: _isDarkMode
+                        ? ColorStyle.lightPrimary
+                        : ColorStyle.darkPrimary,
+                    shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(15),
                         bottomRight: Radius.circular(15),
@@ -51,13 +119,22 @@ class Home extends StatelessWidget {
                           right: 20,
                         ),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             const Text(
                               'Cari Tempat Tongkronganmu \nbersama Bross',
                               style: TextStyle(
                                 color: ColorStyle.white,
-                                fontSize: 20,
+                                fontSize: 16,
+                              ),
+                            ),
+                            Transform.scale(
+                              scale: 0.7,
+                              child: Switch(
+                                value: _isDarkMode,
+                                onChanged: (value) {
+                                  _toggleTheme(value);
+                                },
                               ),
                             ),
                             InkWell(
@@ -135,18 +212,26 @@ class Home extends StatelessWidget {
                 )
               ],
             ),
-            const Padding(
-              padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+            Padding(
+              padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     'Rekomendasi',
-                    style: TextStyle(fontSize: 14, color: ColorStyle.black),
+                    style: TextStyle(
+                        fontSize: 14,
+                        color: _isDarkMode
+                            ? ColorStyle.darkText
+                            : ColorStyle.lightText),
                   ),
                   Text(
                     'Selengkapnya',
-                    style: TextStyle(fontSize: 14, color: ColorStyle.black),
+                    style: TextStyle(
+                        fontSize: 14,
+                        color: _isDarkMode
+                            ? ColorStyle.darkText
+                            : ColorStyle.lightText),
                   )
                 ],
               ),
@@ -166,6 +251,7 @@ class Home extends StatelessWidget {
                         onTap: () {
                           navigateToProductDetail(
                             context,
+                            _themeData,
                             'assets/kaedo.jpg',
                             'Coffe Kaedo',
                             'Jl. Pahlawan No. 123, Kota Kamu',
@@ -252,6 +338,7 @@ class Home extends StatelessWidget {
                         onTap: () {
                           navigateToProductDetail(
                             context,
+                            _themeData,
                             'assets/loffe.jpg',
                             'Coffe loffe',
                             'Jl. mantan No. 123, Kota Kamu',
@@ -343,6 +430,7 @@ class Home extends StatelessWidget {
                         onTap: () {
                           navigateToProductDetail(
                             context,
+                            _themeData,
                             'assets/temu.jpg',
                             'Coffe Temu',
                             'Jl. arundam No. 123, Kota Kamu',
@@ -429,6 +517,7 @@ class Home extends StatelessWidget {
                         onTap: () {
                           navigateToProductDetail(
                             context,
+                            _themeData,
                             'assets/otten.jpg',
                             'Coffe Otten',
                             'Jl. taiwan No. 123, Kota Kamu',
@@ -518,6 +607,29 @@ class Home extends StatelessWidget {
             )
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+            // Tambahkan logika untuk navigasi ke halaman sesuai dengan index yang dipilih
+          });
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: 'Search',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            label: 'Favorites',
+          ),
+        ],
       ),
     );
   }

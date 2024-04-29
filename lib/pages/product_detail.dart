@@ -6,6 +6,7 @@ class ProductDetail extends StatelessWidget {
   final String name;
   final String address;
   final String description;
+  final ThemeData themeData;
 
   const ProductDetail({
     Key? key,
@@ -13,6 +14,7 @@ class ProductDetail extends StatelessWidget {
     required this.name,
     required this.address,
     required this.description,
+    required this.themeData,
   }) : super(key: key);
 
   @override
@@ -20,7 +22,9 @@ class ProductDetail extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Detail Produk'),
-        backgroundColor: ColorStyle.primary,
+        backgroundColor: themeData == ThemeData.dark()
+            ? ColorStyle.darkPrimary
+            : ColorStyle.lightPrimary,
       ),
       body: SingleChildScrollView(
         child: Column(

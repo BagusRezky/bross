@@ -10,9 +10,11 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
+      home: const SplashScreen(),
     );
   }
 }

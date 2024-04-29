@@ -18,4 +18,13 @@ class ColorStyle {
   static const Color black = Color(0xff000000);
   static const Color bgCart = Color(0xFFEEDFDF);
   static const Color textCart = Color(0xFFC97123);
+
+
+  static const Color lightBackground = Color(0xffF1F1F1);
+  static const Color lightText = Color(0xff000000);
+  static const Color lightPrimary = Color(0xff178AF3);
+
+  static const Color darkBackground = Color(0xff343a40);
+  static const Color darkText = Color(0xffffffff);
+  static const Color darkPrimary = Color(0xffFFB347);
 }
