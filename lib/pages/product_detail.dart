@@ -6,7 +6,7 @@ class ProductDetail extends StatelessWidget {
   final String name;
   final String address;
   final String description;
-  final ThemeData themeData;
+  final bool isDarkMode;
 
   const ProductDetail({
     Key? key,
@@ -14,7 +14,7 @@ class ProductDetail extends StatelessWidget {
     required this.name,
     required this.address,
     required this.description,
-    required this.themeData,
+    required this.isDarkMode,
   }) : super(key: key);
 
   @override
@@ -22,9 +22,8 @@ class ProductDetail extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Detail Produk'),
-        backgroundColor: themeData == ThemeData.dark()
-            ? ColorStyle.darkPrimary
-            : ColorStyle.lightPrimary,
+        backgroundColor:
+            isDarkMode ? ColorStyle.lightPrimary : ColorStyle.darkPrimary,
       ),
       body: SingleChildScrollView(
         child: Column(
