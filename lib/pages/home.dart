@@ -69,13 +69,13 @@ class _HomeState extends State<Home> {
     );
   }
 
-  void navigateToProductDetail(BuildContext context, ThemeData themeData,
+  void navigateToProductDetail(BuildContext context, bool isDarkMode,
       String image, String name, String address, String description) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => ProductDetail(
-          themeData: themeData,
+          isDarkMode: isDarkMode,
           image: image,
           name: name,
           address: address,
@@ -251,7 +251,7 @@ class _HomeState extends State<Home> {
                         onTap: () {
                           navigateToProductDetail(
                             context,
-                            _themeData,
+                            _isDarkMode,
                             'assets/kaedo.jpg',
                             'Coffe Kaedo',
                             'Jl. Pahlawan No. 123, Kota Kamu',
@@ -338,7 +338,7 @@ class _HomeState extends State<Home> {
                         onTap: () {
                           navigateToProductDetail(
                             context,
-                            _themeData,
+                            _isDarkMode,
                             'assets/loffe.jpg',
                             'Coffe loffe',
                             'Jl. mantan No. 123, Kota Kamu',
@@ -430,7 +430,7 @@ class _HomeState extends State<Home> {
                         onTap: () {
                           navigateToProductDetail(
                             context,
-                            _themeData,
+                            _isDarkMode,
                             'assets/temu.jpg',
                             'Coffe Temu',
                             'Jl. arundam No. 123, Kota Kamu',
@@ -517,7 +517,7 @@ class _HomeState extends State<Home> {
                         onTap: () {
                           navigateToProductDetail(
                             context,
-                            _themeData,
+                            _isDarkMode,
                             'assets/otten.jpg',
                             'Coffe Otten',
                             'Jl. taiwan No. 123, Kota Kamu',
